@@ -71,6 +71,7 @@ spec:
   environment {
     REPOFLOW_BASE_URL = "${params.REPOFLOW_BASE_URL}"
     REPOFLOW_WORKSPACE = "${params.REPOFLOW_WORKSPACE}"
+    REPOFLOW_CREDENTIALS = credentials('repoflow-credentials')
     SMOKE_RUN_ID = "${env.BUILD_NUMBER}-${env.GIT_COMMIT?.take(8) ?: 'dev'}"
   }
 
@@ -84,9 +85,7 @@ spec:
     stage('npm') {
       steps {
         container('node') {
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-npm.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-npm.sh'
         }
       }
     }
@@ -94,9 +93,7 @@ spec:
     stage('pypi') {
       steps {
         container('python') {
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-pypi.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-pypi.sh'
         }
       }
     }
@@ -105,9 +102,7 @@ spec:
       steps {
         container('golang') {
           sh 'apt-get update >/dev/null && apt-get install -y git >/dev/null'
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-go.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-go.sh'
         }
       }
     }
@@ -116,9 +111,7 @@ spec:
       steps {
         container('helm') {
           sh 'apk add --no-cache bash curl tar gzip >/dev/null'
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-helm.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-helm.sh'
         }
       }
     }
@@ -127,9 +120,7 @@ spec:
       steps {
         container('helm') {
           sh 'apk add --no-cache bash curl tar gzip >/dev/null'
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-universal.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-universal.sh'
         }
       }
     }
@@ -140,9 +131,7 @@ spec:
       }
       steps {
         container('docker') {
-          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
-            sh 'bash ci/test-docker.sh'
-          }
+          sh 'export REPOFLOW_PAT="$REPOFLOW_CREDENTIALS_PSW"; bash ci/test-docker.sh'
         }
       }
     }
