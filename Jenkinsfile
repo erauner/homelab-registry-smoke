@@ -20,7 +20,7 @@ spec:
     image: node:20-bookworm
     command: ['sleep', '3600']
   - name: python
-    image: python:3.12-slim
+    image: python:3.12-bookworm
     command: ['sleep', '3600']
   - name: golang
     image: golang:1.22
@@ -88,6 +88,7 @@ spec:
     stage('go') {
       steps {
         container('golang') {
+          sh 'apt-get update >/dev/null && apt-get install -y git >/dev/null'
           sh 'bash ci/test-go.sh'
         }
       }
@@ -104,8 +105,9 @@ spec:
 
     stage('universal') {
       steps {
-        container('curl') {
-          sh 'sh ci/test-universal.sh'
+        container('helm') {
+          sh 'apk add --no-cache bash curl tar gzip >/dev/null'
+          sh 'bash ci/test-universal.sh'
         }
       }
     }

@@ -10,16 +10,12 @@ fi
 : "${REPOFLOW_WORKSPACE:=homelab}"
 : "${SMOKE_RUN_ID:=local}"
 
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPOFLOW_API_URL="${REPOFLOW_BASE_URL}/api"
 RUN_TS="$(date +%Y%m%d%H%M%S)"
 SMOKE_ID="${SMOKE_RUN_ID}-${RUN_TS}"
-
+SMOKE_VERSION="0.0.${RUN_TS}"
 host_no_scheme="$(echo "${REPOFLOW_BASE_URL}" | sed 's#^https\?://##')"
-
-api_get() {
-  local path="$1"
-  curl -fsS -H "Authorization: Bearer ${REPOFLOW_PAT}" "${REPOFLOW_API_URL}${path}"
-}
 
 api_post_form() {
   local path="$1"
@@ -33,3 +29,4 @@ api_post_form() {
 echo "RepoFlow: ${REPOFLOW_BASE_URL}"
 echo "Workspace: ${REPOFLOW_WORKSPACE}"
 echo "Smoke ID: ${SMOKE_ID}"
+echo "Version: ${SMOKE_VERSION}"

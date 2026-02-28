@@ -1,22 +1,25 @@
 # homelab-repoflow-smoke
 
-CI smoke repository for validating RepoFlow publish/pull workflows across package types.
+CI smoke repository for validating RepoFlow publish/pull workflows using real project directories that Jenkins builds.
 
-## What it tests
+## Repository layout
 
-- npm: publish to local repo and install from virtual repo
-- PyPI: upload to local repo and install from virtual repo
-- Go: pull via virtual Go proxy
-- Helm: upload chart to local repo and pull from virtual repo
-- Universal: upload file to local repo and download from virtual repo
-- Docker (optional): push to local repo and pull from virtual repo
+- `packages/npm`: Node package published to npm-local and installed from npm (virtual)
+- `packages/python`: Python package built and uploaded to pypi-local, then installed from pypi (virtual)
+- `packages/go`: Go module/app built with dependencies resolved through Go virtual proxy
+- `charts/rf-helm-smoke`: Helm chart packaged and uploaded to helm-local, then pulled from helm (virtual)
+- `assets/universal`: Files packaged and uploaded to universal-local, then downloaded from universal (virtual)
+- `docker`: Docker context built and pushed to docker-local, then pulled from docker (virtual)
+- `ci/`: CI stage scripts used by `Jenkinsfile`
 
-## Jenkins usage
-
-Run the `Jenkinsfile` with:
+## Jenkins parameters
 
 - `REPOFLOW_BASE_URL` (default: `https://repoflow.erauner.dev`)
 - `REPOFLOW_WORKSPACE` (default: `homelab`)
 - `REPOFLOW_PAT` (required)
-- `RUN_DOCKER` (default: false)
+- `RUN_DOCKER` (default: `false`)
 
+## Notes
+
+- Docker stage is optional because it requires daemon access in the Jenkins agent runtime.
+- Go stage currently uses `GOSUMDB=off` because RepoFlow Go sumdb proxy support is not enabled.

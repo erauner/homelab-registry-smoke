@@ -1,0 +1,7 @@
+{
+  "name": "repoflow-npm-smoke",
+  "version": "0.0.0",
+  "description": "RepoFlow npm smoke package",
+  "main": "src/index.js",
+  "license": "MIT"
+}
